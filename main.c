@@ -27,6 +27,10 @@ typedef struct{
         int **matriz;
 }sudoku;
 
+typedef struct{
+        int index;
+        sudoku *sudoku;
+}funcionalidade;
 
 int main(int argc, char *argv[]){
 
@@ -101,6 +105,29 @@ int main(int argc, char *argv[]){
         pthread_t thread_linha[n], thread_coluna[n], thread_grade[sdk.qtd_grades]; 
         
         int t_linha[n], t_coluna[n], t_grade[sdk.qtd_grades];
+
+        //associar funcoes as threads
+        //para linhas 
+        funcionalidade varre_linha[n];
+        for (i=0; i<n; i++){
+                varre_linha[i].index = i;
+                varre_linha[i].sudoku = &sdk;
+                t_linha[i] = pthread_create(&thread_linha[i],NULL,(void*)verifica_linha,(void *)&varre_linha[i]);
+        }
+
+        funcionalidade varre_coluna[n];
+        for (i=0; i<n; i++){
+                varre_coluna[i].index = i;
+                varre_coluna[i].sudoku = &sdk;
+                t_coluna[i] = pthread_create(&thread_coluna[i],NULL,(void*)verifica_coluna,(void *)&varre_coluna[i]);
+        }
+        
+        funcionalidade varre_grade[sdk.qtd_grades];
+        for (i=0; i<sdk.qtd_grades; i++){
+                varre_grade[i].index = i;
+                varre_grade[i].sudoku = &sdk;
+                t_grade[i] = pthread_create(&thread_grade[i],NULL,(void*)verifica_grade,(void *)&varre_grade[i]);
+        }
 
         //declaracao de resultado
         out = fopen("sudoku_jphc.out.txt", "w");
