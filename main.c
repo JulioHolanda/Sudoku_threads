@@ -23,9 +23,10 @@ typedef struct{
         int tot;
         int linha;
         int coluna;
-        int grades;
-        int *matriz;
+        int qtd_grades;
+        int **matriz;
 }sudoku;
+
 
 int main(int argc, char *argv[]){
 
@@ -60,35 +61,46 @@ int main(int argc, char *argv[]){
         fscanf(in," %d%c%c", &n, &lixo, &lixo1);
         fscanf(in," %d%c%d", &linha, &lixo, &coluna);
         fgetc(in);
-        
+/*
         printf("N: %d\nlinha: %d\ncoluna: %d\n",n,linha,coluna);
-        
-        int matriz[n*n];        
+*/      
+              
+        sudoku sdk = {n, n*n, linha, coluna, (n*n)/(linha*coluna),malloc(sizeof(*sdk.matriz )*n)};
+
+        for (i=0; i<n;i++){
+                sdk.matriz[i] = malloc(sizeof(*sdk.matriz[n])*n);
+        }
 
         for(i=0; i < n; i++){
                 for(j=0; j < n ; j++){
                         //matriz[i][j] = fgetc(in) - 48;
-                        fscanf(in," %d%c",&matriz[(i*n) + j], &lixo);
+                        fscanf(in," %d%c",&sdk.matriz[i][j], &lixo);
                 }
+        }
+        
+        fscanf(in,"%c", &lixo);
+        if (lixo == EOF){
+
+                printf("\n%d\n", lixo);
         }
 
         fclose(in);
 
-        sudoku sdk = {n, n*n, linha, coluna, (n*n)/(linha*coluna), matriz};
-
+/*
         printf("sdk.N: %d\nsdk.linha: %d\nsdk.coluna: %d\nsdk.total: %d\nsdk.grades: %d\n",sdk.N,sdk.linha,sdk.coluna,sdk.tot,sdk.grades);      
+*/
 
         for(i=0; i < n; i++){
                 for(j=0; j < n ; j++){
-                        printf("%d ",sdk.matriz[(i*n) + j]);
+                        printf("%d ",sdk.matriz[i][j]);
                 }
                 printf("\n");
         }
 
         //inicialização de threads
-        pthread_t thread_linha[n], thread_coluna[n], thread_grade[sdk.grades]; 
+        pthread_t thread_linha[n], thread_coluna[n], thread_grade[sdk.qtd_grades]; 
         
-        int t_linha[n], t_coluna[n], t_grade[sdk.grades];
+        int t_linha[n], t_coluna[n], t_grade[sdk.qtd_grades];
 
         //declaracao de resultado
         out = fopen("sudoku_jphc.out.txt", "w");
