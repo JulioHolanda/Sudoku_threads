@@ -1,6 +1,7 @@
+.vscode/
 a.out
 main
 sudoku_jphc.out.txt
-.vscode/
 input.txt
+inputw.txt
 temp.txt

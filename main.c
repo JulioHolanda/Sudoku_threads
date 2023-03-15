@@ -85,12 +85,14 @@ int main(int argc, char *argv[]){
                         fscanf(in," %d%c",&sdk.matriz[i][j], &lixo);
                 }
         }
-        
+
+/*
         fscanf(in,"%c", &lixo);
         if (lixo == EOF){
 
                 printf("\n%d\n", lixo);
         }
+*/      
 
         fclose(in);
 
@@ -122,7 +124,7 @@ int main(int argc, char *argv[]){
                         exit(EXIT_FAILURE);
                 }
         }
-
+/*
         funcionalidade varre_coluna[n];
         for (i=0; i<n; i++){
                 varre_coluna[i].index = i;
@@ -143,6 +145,12 @@ int main(int argc, char *argv[]){
                         fprintf(stderr, "Error -pthread_create() return code: %d\n", t_grade[i]);
                         exit(EXIT_FAILURE);
                 }
+        }
+*/
+
+        //esperando por threads
+        for (i=0; i<n; i++){
+                pthread_join(thread_linha[i], NULL);
         }
 
         //declaracao de resultado
@@ -178,8 +186,6 @@ void *verifica_linha(void *ptr){
                         }
                 }
         }
-
-
 
         return NULL;
 }
