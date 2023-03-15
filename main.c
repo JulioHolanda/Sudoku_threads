@@ -98,7 +98,6 @@ int main(int argc, char *argv[]){
 
 /*
         printf("sdk.N: %d\nsdk.linha: %d\nsdk.coluna: %d\nsdk.total: %d\nsdk.grades: %d\n",sdk.N,sdk.linha,sdk.coluna,sdk.tot,sdk.grades);      
-*/
 
         for(i=0; i < n; i++){
                 for(j=0; j < n ; j++){
@@ -107,6 +106,7 @@ int main(int argc, char *argv[]){
                 printf("\n");
         }
 
+*/
         //inicialização de threads
         pthread_t thread_linha[n], thread_coluna[n], thread_grade[sdk.qtd_grades]; 
         
@@ -114,6 +114,7 @@ int main(int argc, char *argv[]){
 
         //associar funcoes as threads
         //para linhas 
+
         funcionalidade varre_linha[n];
         for (i=0; i<n; i++){
                 varre_linha[i].index = i;
@@ -124,7 +125,7 @@ int main(int argc, char *argv[]){
                         exit(EXIT_FAILURE);
                 }
         }
-/*
+
         funcionalidade varre_coluna[n];
         for (i=0; i<n; i++){
                 varre_coluna[i].index = i;
@@ -136,6 +137,7 @@ int main(int argc, char *argv[]){
                 }
         }
         
+/*
         funcionalidade varre_grade[sdk.qtd_grades];
         for (i=0; i<sdk.qtd_grades; i++){
                 varre_grade[i].index = i;
@@ -151,6 +153,7 @@ int main(int argc, char *argv[]){
         //esperando por threads
         for (i=0; i<n; i++){
                 pthread_join(thread_linha[i], NULL);
+                pthread_join(thread_coluna[i], NULL);
         }
 
         //declaracao de resultado
@@ -191,6 +194,19 @@ void *verifica_linha(void *ptr){
 }
 
 void *verifica_coluna(void *ptr){
+
+        funcionalidade *varre_coluna;
+        varre_coluna = (funcionalidade*) ptr;
+
+        int coluna = varre_coluna->index;
+
+        for (int i = 0; i < (varre_coluna->sudoku->N)-1; i++){ 
+                for (int j= i+1; j < varre_coluna->sudoku->N ; j++ ){ 
+                        if( varre_coluna->sudoku->matriz[i][coluna] == varre_coluna->sudoku->matriz[j][coluna]){
+                                error_coluna+=1;
+                        }
+                }
+        }
 
         return NULL;
 }
