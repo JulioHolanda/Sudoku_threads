@@ -1,9 +1,11 @@
+//-lpthread 
+
 //acessar documento OK
 //navegar e pegar informaçõpes OK
 //salver informaçoes no struct OK
 //criar funcoes de varredura
-//criar threads
-//dividir tarefas entre threads
+//criar threads OK
+//dividir tarefas entre threads OK
 //output em arquivo especifico com resposta OK
 //TESTES 2/3
 
@@ -16,7 +18,9 @@ void *verifica_linha(void *ptr);
 void *verifica_coluna(void *ptr);
 void *verifica_grade(void *ptr);
 
-int error = 0;
+int error_linha = 0;
+int error_coluna = 0;
+int error_grade = 0;
 
 typedef struct{
         int N;
@@ -72,7 +76,7 @@ int main(int argc, char *argv[]){
         sudoku sdk = {n, n*n, linha, coluna, (n*n)/(linha*coluna),malloc(sizeof(*sdk.matriz )*n)};
 
         for (i=0; i<n;i++){
-                sdk.matriz[i] = malloc(sizeof(*sdk.matriz[n])*n);
+                sdk.matriz[i] = malloc(sizeof(**sdk.matriz)*n);
         }
 
         for(i=0; i < n; i++){
@@ -113,6 +117,10 @@ int main(int argc, char *argv[]){
                 varre_linha[i].index = i;
                 varre_linha[i].sudoku = &sdk;
                 t_linha[i] = pthread_create(&thread_linha[i],NULL,(void*)verifica_linha,(void *)&varre_linha[i]);
+        	if(t_linha[i]){
+                        fprintf(stderr, "Error -pthread_create() return code: %d\n", t_linha[i]);
+                        exit(EXIT_FAILURE);
+                }
         }
 
         funcionalidade varre_coluna[n];
@@ -120,6 +128,10 @@ int main(int argc, char *argv[]){
                 varre_coluna[i].index = i;
                 varre_coluna[i].sudoku = &sdk;
                 t_coluna[i] = pthread_create(&thread_coluna[i],NULL,(void*)verifica_coluna,(void *)&varre_coluna[i]);
+                if(t_coluna[i]){
+                        fprintf(stderr, "Error -pthread_create() return code: %d\n", t_coluna[i]);
+                        exit(EXIT_FAILURE);
+                }
         }
         
         funcionalidade varre_grade[sdk.qtd_grades];
@@ -127,12 +139,18 @@ int main(int argc, char *argv[]){
                 varre_grade[i].index = i;
                 varre_grade[i].sudoku = &sdk;
                 t_grade[i] = pthread_create(&thread_grade[i],NULL,(void*)verifica_grade,(void *)&varre_grade[i]);
+                if(t_grade[i]){
+                        fprintf(stderr, "Error -pthread_create() return code: %d\n", t_grade[i]);
+                        exit(EXIT_FAILURE);
+                }
         }
 
         //declaracao de resultado
         out = fopen("sudoku_jphc.out.txt", "w");
 
-        if(error == 0){
+        if(error_linha == 0 && 
+        error_coluna == 0 &&
+        error_grade == 0){
                 fprintf(out, "SUCCESS");
         }
         else{
@@ -142,4 +160,36 @@ int main(int argc, char *argv[]){
         fclose(out);
 
         return 0;
+}
+
+void *verifica_linha(void *ptr){
+
+        funcionalidade * varre_linha;
+        varre_linha = (funcionalidade *) ptr;
+
+        int avaliado, procurando;
+        int error = 0;
+        int linha = varre_linha->index;
+
+        for (int i = 0; i < (varre_linha->sudoku->N)-1; i++){ //avaliado vai do ultimo ao penultimo
+                for (int j= i+1; j < varre_linha->sudoku->N ; j++ ){ //começando seguinte ao avaliado ate os fim
+                        if( varre_linha->sudoku->matriz[linha][i] == varre_linha->sudoku->matriz[linha][j]){
+                                error_linha+=1;
+                        }
+                }
+        }
+
+
+
+        return NULL;
+}
+
+void *verifica_coluna(void *ptr){
+
+        return NULL;
+}
+
+void *verifica_grade(void *ptr){
+
+        return NULL;
 }
