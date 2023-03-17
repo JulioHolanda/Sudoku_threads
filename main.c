@@ -3,11 +3,13 @@
 //acessar documento OK
 //navegar e pegar informaçõpes OK
 //salver informaçoes no struct OK
-//criar funcoes de varredura
+//criar funcoes de varredura OK
 //criar threads OK
 //dividir tarefas entre threads OK
 //output em arquivo especifico com resposta OK
 //TESTES 2/3
+//aplicar MUTEX
+//tratamentos de erro para malloc
 
 
 #include <stdio.h>
@@ -80,24 +82,27 @@ int main(int argc, char *argv[]){
         }
 
         for(i=0; i < n; i++){
-                for(j=0; j < n ; j++){
+                fscanf(in," %d",&sdk.matriz[i][0]);
+
+                for(j=1; j < n ; j++){
                         //matriz[i][j] = fgetc(in) - 48;
-                        fscanf(in," %d%c",&sdk.matriz[i][j], &lixo);
+                        fscanf(in,"%c%d",&lixo, &sdk.matriz[i][j]);
                 }
+                printf(" %d", fgetc(in));
+
         }
 
-/*
-        fscanf(in,"%c", &lixo);
-        if (lixo == EOF){
+        if (fgetc(in) == EOF){
 
-                printf("\n%d\n", lixo);
+                printf("\nEOF\n");
         }
-*/      
+   
 
         fclose(in);
 
 /*
         printf("sdk.N: %d\nsdk.linha: %d\nsdk.coluna: %d\nsdk.total: %d\nsdk.grades: %d\n",sdk.N,sdk.linha,sdk.coluna,sdk.tot,sdk.grades);      
+*/
 
         for(i=0; i < n; i++){
                 for(j=0; j < n ; j++){
@@ -106,7 +111,6 @@ int main(int argc, char *argv[]){
                 printf("\n");
         }
 
-*/
         //inicialização de threads
         pthread_t thread_linha[n], thread_coluna[n], thread_grade[sdk.qtd_grades]; 
         
@@ -114,7 +118,6 @@ int main(int argc, char *argv[]){
 
         //associar funcoes as threads
         //para linhas 
-
         funcionalidade varre_linha[n];
         for (i=0; i<n; i++){
                 varre_linha[i].index = i;
@@ -137,7 +140,6 @@ int main(int argc, char *argv[]){
                 }
         }
         
-/*
         funcionalidade varre_grade[sdk.qtd_grades];
         for (i=0; i<sdk.qtd_grades; i++){
                 varre_grade[i].index = i;
@@ -148,12 +150,16 @@ int main(int argc, char *argv[]){
                         exit(EXIT_FAILURE);
                 }
         }
-*/
 
         //esperando por threads
         for (i=0; i<n; i++){
                 pthread_join(thread_linha[i], NULL);
                 pthread_join(thread_coluna[i], NULL);
+        }
+
+
+        for ( i=0 ; i < sdk.qtd_grades; i++){
+                pthread_join(thread_grade[i], NULL);
         }
 
         //declaracao de resultado
@@ -185,7 +191,7 @@ void *verifica_linha(void *ptr){
         for (int i = 0; i < (varre_linha->sudoku->N)-1; i++){ //avaliado vai do ultimo ao penultimo
                 for (int j= i+1; j < varre_linha->sudoku->N ; j++ ){ //começando seguinte ao avaliado ate os fim
                         if( varre_linha->sudoku->matriz[linha][i] == varre_linha->sudoku->matriz[linha][j]){
-                                error_linha+=1;
+                                error_linha += 1;
                         }
                 }
         }
@@ -203,7 +209,7 @@ void *verifica_coluna(void *ptr){
         for (int i = 0; i < (varre_coluna->sudoku->N)-1; i++){ 
                 for (int j= i+1; j < varre_coluna->sudoku->N ; j++ ){ 
                         if( varre_coluna->sudoku->matriz[i][coluna] == varre_coluna->sudoku->matriz[j][coluna]){
-                                error_coluna+=1;
+                                error_coluna += 1;
                         }
                 }
         }
@@ -212,6 +218,38 @@ void *verifica_coluna(void *ptr){
 }
 
 void *verifica_grade(void *ptr){
+
+        funcionalidade *varre_grade;
+        varre_grade = (funcionalidade *) ptr;
+
+        int repete = 0;
+        
+        int grade = varre_grade->index;
+        int x = varre_grade->sudoku->coluna;
+        int y = varre_grade->sudoku->linha;
+
+        int qtd_grades = varre_grade->sudoku->qtd_grades;
+        int i_inicial = ((grade * varre_grade->sudoku->coluna) / varre_grade->sudoku->N) * varre_grade->sudoku->linha;
+        int j_inicial = (grade * varre_grade->sudoku->coluna) % varre_grade->sudoku->N;
+
+        for ( int m = i_inicial ; m < i_inicial + y ; m++){        
+                for(int n = j_inicial ; n<j_inicial+ x ; n++){       
+                        for (int i = i_inicial; i< i_inicial+y ; i++){
+                                for (int j = j_inicial; j<j_inicial+x; j++){
+                                        if (varre_grade->sudoku->matriz[m][n] == varre_grade->sudoku->matriz[i][j]){
+                                                repete++;
+                                        }
+                                }
+                        }
+                }
+        }
+/*
+        printf("\n[%d] [%d]", i_inicial, j_inicial);
+        printf("\nREPETE: %d", repete);
+*/        
+        if ( repete != varre_grade->sudoku->N ){
+                error_grade += 1;
+        }
 
         return NULL;
 }
