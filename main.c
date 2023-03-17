@@ -119,6 +119,8 @@ int main(int argc, char *argv[]){
         
         int t_linha[n], t_coluna[n], t_grade[sdk.qtd_grades];
 
+/*
+*/
         //associar funcoes as threads
         //para linhas 
         funcionalidade varre_linha[n];
@@ -153,20 +155,24 @@ int main(int argc, char *argv[]){
                         exit(EXIT_FAILURE);
                 }
         }
-
+/*
+*/
         //esperando por threads
         for (i=0; i<n; i++){
-                pthread_join(thread_linha[i], NULL);
+                //pthread_join(thread_linha[i], NULL);
                 pthread_join(thread_coluna[i], NULL);
         }
-
+/*
+*/
 
         for ( i=0 ; i < sdk.qtd_grades; i++){
                 pthread_join(thread_grade[i], NULL);
         }
+/*
+*/
 
         //declaracao de resultado
-        out = fopen("sudoku_jphc.out.txt", "w");
+        out = fopen("sudoku_jphc.out", "w");
 
         if(error_linha == 0 && 
         error_coluna == 0 &&
