@@ -69,11 +69,11 @@ int main(int argc, char *argv[]){
         */
 
         fscanf(in," %d%c%c", &n, &lixo, &lixo1);
-        fscanf(in," %d%c%d", &linha, &lixo, &coluna);
         fgetc(in);
+        fscanf(in,"%d%c%d", &linha, &lixo, &coluna);
 /*
-        printf("N: %d\nlinha: %d\ncoluna: %d\n",n,linha,coluna);
 */      
+        printf("N: %d\nlinha: %d\ncoluna: %d\n",n,linha,coluna);
               
         sudoku sdk = {n, n*n, linha, coluna, (n*n)/(linha*coluna),malloc(sizeof(*sdk.matriz )*n)};
 
@@ -103,6 +103,7 @@ int main(int argc, char *argv[]){
 /*
         printf("sdk.N: %d\nsdk.linha: %d\nsdk.coluna: %d\nsdk.total: %d\nsdk.grades: %d\n",sdk.N,sdk.linha,sdk.coluna,sdk.tot,sdk.grades);      
 */
+        printf("\n");
 
         for(i=0; i < n; i++){
                 for(j=0; j < n ; j++){
