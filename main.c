@@ -45,6 +45,7 @@ int main(int argc, char *argv[]){
         int n, linha, coluna;
         int i, j;
         char lixo, lixo1;
+        int lixoInt;
 
         if(argc != 2){
                 printf("Invalid number of parameters");
@@ -68,9 +69,10 @@ int main(int argc, char *argv[]){
         char lixo sem & nao funcionava!!
         */
 
-        fscanf(in," %d%c%c", &n, &lixo, &lixo1);
-        fgetc(in);
+        fscanf(in," %d%c%d", &n, &lixo, &lixoInt);
+        //printf("%d\n",fgetc(in));
         fscanf(in,"%d%c%d", &linha, &lixo, &coluna);
+        //printf("%d\n",fgetc(in));
 /*
 */      
         printf("N: %d\nlinha: %d\ncoluna: %d\n",n,linha,coluna);
@@ -102,7 +104,6 @@ int main(int argc, char *argv[]){
 
 /*
         printf("sdk.N: %d\nsdk.linha: %d\nsdk.coluna: %d\nsdk.total: %d\nsdk.grades: %d\n",sdk.N,sdk.linha,sdk.coluna,sdk.tot,sdk.grades);      
-*/
         printf("\n");
 
         for(i=0; i < n; i++){
@@ -111,6 +112,7 @@ int main(int argc, char *argv[]){
                 }
                 printf("\n");
         }
+*/
 
         //inicialização de threads
         pthread_t thread_linha[n], thread_coluna[n], thread_grade[sdk.qtd_grades]; 
