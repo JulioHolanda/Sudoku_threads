@@ -74,8 +74,32 @@ int main(int argc, char *argv[]){
         */
 
         fscanf(in," %d%c%d", &n, &lixo, &lixoInt);
+
+        if( lixo != 'x' || n != lixoInt || n <9 || lixoInt < 9  ){
+                printf("File out of format");
+                exit(1);        
+        }
+                
+        if (fgetc(in) != 10){
+
+                printf("File out of format");
+                exit(1);
+        }
+
+        //printf("%d", lixoInt);
         //printf("%d\n",fgetc(in));
         fscanf(in,"%d%c%d", &linha, &lixo, &coluna);
+
+        if( lixo != 'x' || (linha*coluna) != n || linha ==0 ||coluna == 0 ){
+                printf("File out of format");
+                exit(1);        
+        }
+
+        if (fgetc(in) != 10){
+
+                printf("File out of format");
+                exit(1);
+        }
         //printf("%d\n",fgetc(in));
 /*
 */      
@@ -94,14 +118,24 @@ int main(int argc, char *argv[]){
                         //matriz[i][j] = fgetc(in) - 48;
                         fscanf(in,"%c%d",&lixo, &sdk.matriz[i][j]);
                 }
-                printf(" %d", fgetc(in));
+
+                if( i != (n-1) && fgetc(in) != 10){
+                        printf("File out of format");
+                        exit(1);
+                }
+                //printf(" %d", fgetc(in));
 
         }
 
-        if (fgetc(in) == EOF){
+        // ACHO ESSE PERIGOSO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                printf("\nEOF\n");
+        /*
+        if (fgetc(in) != EOF){
+
+                printf("File out of format");
+                exit(1);
         }
+        */
    
 
         fclose(in);
