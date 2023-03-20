@@ -20,6 +20,10 @@ void *verifica_linha(void *ptr);
 void *verifica_coluna(void *ptr);
 void *verifica_grade(void *ptr);
 
+pthread_mutex_t mutex_linha = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex_coluna = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t mutex_grade = PTHREAD_MUTEX_INITIALIZER;
+
 int error_linha = 0;
 int error_coluna = 0;
 int error_grade = 0;
@@ -200,7 +204,9 @@ void *verifica_linha(void *ptr){
         for (int i = 0; i < (varre_linha->sudoku->N)-1; i++){ //avaliado vai do ultimo ao penultimo
                 for (int j= i+1; j < varre_linha->sudoku->N ; j++ ){ //começando seguinte ao avaliado ate os fim
                         if( varre_linha->sudoku->matriz[linha][i] == varre_linha->sudoku->matriz[linha][j]){
+                                pthread_mutex_lock(&mutex_linha);
                                 error_linha += 1;
+                                pthread_mutex_unlock(&mutex_linha);
                         }
                 }
         }
@@ -218,7 +224,9 @@ void *verifica_coluna(void *ptr){
         for (int i = 0; i < (varre_coluna->sudoku->N)-1; i++){ 
                 for (int j= i+1; j < varre_coluna->sudoku->N ; j++ ){ 
                         if( varre_coluna->sudoku->matriz[i][coluna] == varre_coluna->sudoku->matriz[j][coluna]){
+                                pthread_mutex_lock(&mutex_coluna);
                                 error_coluna += 1;
+                                pthread_mutex_unlock(&mutex_coluna);
                         }
                 }
         }
@@ -257,7 +265,9 @@ void *verifica_grade(void *ptr){
         printf("\nREPETE: %d", repete);
 */        
         if ( repete != varre_grade->sudoku->N ){
+                pthread_mutex_lock(&mutex_grade);
                 error_grade += 1;
+                pthread_mutex_unlock(&mutex_grade);
         }
 
         return NULL;
