@@ -170,6 +170,8 @@ int main(int argc, char *argv[]){
         //associar funcoes as threads
         //para linhas 
         funcionalidade varre_linha[n];
+        funcionalidade varre_coluna[n];
+        funcionalidade varre_grade[sdk.qtd_grades];
         for (i=0; i<n; i++){
                 varre_linha[i].index = i;
                 varre_linha[i].sudoku = &sdk;
@@ -178,10 +180,6 @@ int main(int argc, char *argv[]){
                         fprintf(stderr, "Error -pthread_create() return code: %d\n", t_linha[i]);
                         exit(EXIT_FAILURE);
                 }
-        }
-
-        funcionalidade varre_coluna[n];
-        for (i=0; i<n; i++){
                 varre_coluna[i].index = i;
                 varre_coluna[i].sudoku = &sdk;
                 t_coluna[i] = pthread_create(&thread_coluna[i],NULL,(void*)verifica_coluna,(void *)&varre_coluna[i]);
@@ -189,10 +187,6 @@ int main(int argc, char *argv[]){
                         fprintf(stderr, "Error -pthread_create() return code: %d\n", t_coluna[i]);
                         exit(EXIT_FAILURE);
                 }
-        }
-        
-        funcionalidade varre_grade[sdk.qtd_grades];
-        for (i=0; i<sdk.qtd_grades; i++){
                 varre_grade[i].index = i;
                 varre_grade[i].sudoku = &sdk;
                 t_grade[i] = pthread_create(&thread_grade[i],NULL,(void*)verifica_grade,(void *)&varre_grade[i]);
@@ -201,20 +195,26 @@ int main(int argc, char *argv[]){
                         exit(EXIT_FAILURE);
                 }
         }
+
 /*
+        for (i=0; i<n; i++){
+        }
+        
+        for (i=0; i<sdk.qtd_grades; i++){
+        }
 */
         //esperando por threads
         for (i=0; i<n; i++){
                 pthread_join(thread_linha[i], NULL);
                 pthread_join(thread_coluna[i], NULL);
+                pthread_join(thread_grade[i], NULL);
         }
 /*
 */
 
-        for ( i=0 ; i < sdk.qtd_grades; i++){
-                pthread_join(thread_grade[i], NULL);
-        }
 /*
+        for ( i=0 ; i < sdk.qtd_grades; i++){
+        }
 */
 
         //declaracao de resultado
