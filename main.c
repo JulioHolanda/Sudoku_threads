@@ -7,8 +7,8 @@
 //criar threads OK
 //dividir tarefas entre threads OK
 //output em arquivo especifico com resposta OK
-//TESTES 2/3
-//aplicar MUTEX
+//TESTES 3/3 OK
+//aplicar MUTEX OK
 //tratamentos de erro para malloc
 
 
@@ -103,7 +103,7 @@ int main(int argc, char *argv[]){
         //printf("%d\n",fgetc(in));
 /*
 */      
-        printf("N: %d\nlinha: %d\ncoluna: %d\n",n,linha,coluna);
+        //printf("N: %d\nlinha: %d\ncoluna: %d\n",n,linha,coluna);
               
         sudoku sdk = {n, n*n, linha, coluna, (n*n)/(linha*coluna),malloc(sizeof(*sdk.matriz )*n)};
 
@@ -205,7 +205,7 @@ int main(int argc, char *argv[]){
 */
         //esperando por threads
         for (i=0; i<n; i++){
-                //pthread_join(thread_linha[i], NULL);
+                pthread_join(thread_linha[i], NULL);
                 pthread_join(thread_coluna[i], NULL);
         }
 /*
