@@ -52,14 +52,14 @@ int main(int argc, char *argv[]){
         int lixoInt;
 
         if(argc != 2){
-                printf("Invalid number of parameters");
+                printf("Invalid number of parameters\n");
                 exit(1);
         }
 
         in = fopen(argv[1], "r");
 
         if (in == NULL){
-                printf("Error to read file");
+                printf("Error to read file\n");
                 exit(1);
         }
 
@@ -76,13 +76,13 @@ int main(int argc, char *argv[]){
         fscanf(in," %d%c%d", &n, &lixo, &lixoInt);
 
         if( lixo != 'x' || n != lixoInt || n <9 || lixoInt < 9  ){
-                printf("File out of format");
+                printf("File out of format\n");
                 exit(1);        
         }
                 
         if (fgetc(in) != 10){
 
-                printf("File out of format");
+                printf("File out of format\n");
                 exit(1);
         }
 
@@ -91,13 +91,13 @@ int main(int argc, char *argv[]){
         fscanf(in,"%d%c%d", &linha, &lixo, &coluna);
 
         if( lixo != 'x' || (linha*coluna) != n || linha ==0 ||coluna == 0 ){
-                printf("File out of format");
+                printf("File out of format\n");
                 exit(1);        
         }
 
         if (fgetc(in) != 10){
 
-                printf("File out of format");
+                printf("File out of format\n");
                 exit(1);
         }
         //printf("%d\n",fgetc(in));
@@ -113,14 +113,22 @@ int main(int argc, char *argv[]){
 
         for(i=0; i < n; i++){
                 fscanf(in," %d",&sdk.matriz[i][0]);
+                if (sdk.matriz[i][0] < 1 || sdk.matriz[i][0] > n){
+                        printf("File out of format\n");
+                        exit(1);
+                }
 
                 for(j=1; j < n ; j++){
                         //matriz[i][j] = fgetc(in) - 48;
                         fscanf(in,"%c%d",&lixo, &sdk.matriz[i][j]);
+                        if (sdk.matriz[i][j] < 1 || sdk.matriz[i][j] > n || lixo != ' '){
+                                printf("File out of format\n");
+                                exit(1);
+                        }
                 }
 
                 if( i != (n-1) && fgetc(in) != 10){
-                        printf("File out of format");
+                        printf("File out of format\n");
                         exit(1);
                 }
                 //printf(" %d", fgetc(in));
@@ -130,12 +138,12 @@ int main(int argc, char *argv[]){
         // ACHO ESSE PERIGOSO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
         /*
+        */
         if (fgetc(in) != EOF){
 
-                printf("File out of format");
+                printf("File out of format\n");
                 exit(1);
         }
-        */
    
 
         fclose(in);
